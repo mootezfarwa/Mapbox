@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Form from "./form";
-import Map from "./map";
+import Map from "./mapTest";
 
 function Test (){
     // src/components/Map.

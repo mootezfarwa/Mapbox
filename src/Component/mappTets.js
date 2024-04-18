@@ -1,11 +1,11 @@
 // src/components/Map.js
 import React, { useState } from 'react';
 import Form from './form';
-import Map from './map';
+import Map from './mapTest';
 
 
 
-function  Mapp ()  {
+function  MappTest ()  {
   const [selectedCountry, setSelectedCountry] = useState('');
    // Function to handle form submission and update the selected country
    const handleFormSubmit = (country) => {
@@ -24,4 +24,4 @@ function  Mapp ()  {
   );
 };
 
-export default Mapp;
+export default MappTest;
