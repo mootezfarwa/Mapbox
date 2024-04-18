@@ -1,8 +1,9 @@
-// src/components/Map.js
-import React, { useState } from 'react';
-import Form from './form';
-import Map from './map';
+import { useState } from "react";
+import Form from "./form";
+import Map from "./map";
 
+function Test (){
+    // src/components/Map.
 
 
 function  Mapp ()  {
@@ -24,4 +25,5 @@ function  Mapp ()  {
   );
 };
 
-export default Mapp;
+
+}

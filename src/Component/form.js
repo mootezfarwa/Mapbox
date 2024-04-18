@@ -3,10 +3,10 @@ import axios from 'axios';
 import './form.css';
 import Notification from './Notification/Notification';
 import phonehand from "../assets/logo-avocarbon.png";
-import { useNavigate } from 'react-router-dom';  
+import { useNavigate } from 'react-router-dom';
 
 
-function Form() {
+function Form({ onFormSubmit }) {
     const [companies, setCompanies] = useState([]);
     const [selectedCompanyId, setSelectedCompanyId] = useState('');
     const [formData, setFormData] = useState({
@@ -19,9 +19,9 @@ function Form() {
     });
     const [successMessage, setSuccessMessage] = useState('');
     const [showSelect, setShowSelect] = useState(false);
-    const [selectedCountry, setSelectedCountry] = useState('');
 
-    const navigate = useNavigate();  
+
+    const navigate = useNavigate();
     useEffect(() => {
         fetchCompanies();
     }, []);
@@ -35,37 +35,32 @@ function Form() {
             console.error('Error fetching companies: ', error);
         }
     };
-    const handleFormSubmit = (event) => {
-        event.preventDefault();
-        const formData = new FormData(event.target);
-        setSelectedCountry(formData.get('country'));
-        // Submit form data to the server and handle response
-        handleSubmit(event);
-    };
-    
 
     const handleSubmit = async (event) => {
-        event.preventDefault();
+        event.preventDefault(); // Prevent default form submission
         const formData = new FormData(event.target);
-
+        const selectedcountry = formData.get('country');
         try {
             const response = await axios.post('http://localhost:4000/companies', {
                 name: formData.get('name'),
                 headquarters_location: formData.get('headquarters_location'),
                 r_and_d_location: formData.get('r_and_d_location'),
-                country: formData.get('country'),
+                country: selectedcountry,
                 product: formData.get('product')
 
             });
             setSuccessMessage('Company added successfully');
+
+            // Notify the parent component of the selected country
+            onFormSubmit(selectedcountry);
             event.target.reset(); // Reset form after successful submission
         } catch (error) {
             console.error('Error adding company: ', error);
         }
     };
 
-    const navigatehome = ()=>{
-        navigate ('/');
+    const navigatehome = () => {
+        navigate('/');
     }
     const handleUpdateClick = () => {
         setShowSelect(true);
@@ -353,12 +348,12 @@ function Form() {
                         <a href="#" onClick={handleUpdateClick} className="link">Click here to update </a>
                     </div>
                     {selectedCompanyId && <button onClick={handleUpdate} className="button">Update</button>}
-                   <button onClick={navigatehome} className="button">suivant</button>
+                    <button onClick={navigatehome} className="button">suivant</button>
                     <div></div>
                 </div>
             </form>
             <Notification message={successMessage} />
-          
+
 
         </div>
     );
