@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import Form from './Component/form';
 import Homepage from './Homepage';
-import Map from './Component/map';
+import Map from './Component/mapp';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
  
 function App() {
