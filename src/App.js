@@ -2,9 +2,12 @@ import React from 'react';
 import './App.css';
 import Form from './Component/form';
 import Homepage from './Homepage';
-import Map from './Component/mapTest';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Mapp from './Component/mappTets';
+import Map from './Component/mapp';
+import Mapp from './Component/mapp';
+import MappTest from './Component/mappTets';
+import MapTest from './Component/mapTest';
+
  
 function App() {
     return (
@@ -14,8 +17,10 @@ function App() {
                     <Routes>
                         <Route path="/form" element={<Form />} />
                         <Route path="/" element={<Homepage />} />
-                        <Route path="/map" element={<Map />} />
-                        <Route path="/mapp" element={<Mapp />} />
+                        <Route path="/mapp" element={<Mapp/>} />
+                        <Route path="/mapTest" element={<MappTest/>} />
+                        <Route path="/map" element={<MapTest/>} />
+                  
                     </Routes>
                 </div>
             </Router>
