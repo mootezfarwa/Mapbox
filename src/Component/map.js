@@ -3,7 +3,7 @@ import mapboxgl from 'mapbox-gl';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoibW9vdGV6ZmFyd2EiLCJhIjoiY2x1Z3BoaTFqMW9hdjJpcGdibnN1djB5cyJ9.It7emRJnE-Ee59ysZKBOJw';
 
-const Map = ({ rAndDLocation }) => {
+const Map = ({ selectedLocationCoordinates }) => {
     const mapContainerRef = useRef(null);
     const mapRef = useRef(null);
 
@@ -18,21 +18,21 @@ const Map = ({ rAndDLocation }) => {
       mapRef.current = map;
   
       // Add a marker for R&D location if provided
-      if (rAndDLocation) {
+      if (selectedLocationCoordinates) {
           // Log the location here
-          console.log('R&D Location:', rAndDLocation);
+          console.log('R&D Location:', selectedLocationCoordinates);
   
           // Extract coordinates based on the type of location data
           let coordinates;
-          if (typeof rAndDLocation === 'string') {
+          if (typeof selectedLocationCoordinates === 'string') {
               // Assume rAndDLocation is a string in the format "longitude,latitude"
-              const [longitude, latitude] = rAndDLocation.split(',').map(parseFloat);
+              const [longitude, latitude] = selectedLocationCoordinates.split(',').map(parseFloat);
               if (!isNaN(longitude) && !isNaN(latitude)) {
                   coordinates = [longitude, latitude];
               }
-          } else if (rAndDLocation.geometry && rAndDLocation.geometry.coordinates) {
+          } else if (selectedLocationCoordinates.geometry && selectedLocationCoordinates.geometry.coordinates) {
               // Assume rAndDLocation is a GeoJSON feature
-              const [longitude, latitude] = rAndDLocation.geometry.coordinates;
+              const [longitude, latitude] = selectedLocationCoordinates.geometry.coordinates;
               if (!isNaN(longitude) && !isNaN(latitude)) {
                   coordinates = [longitude, latitude];
               }
@@ -52,7 +52,7 @@ const Map = ({ rAndDLocation }) => {
       }
   
       return () => map.remove(); // Clean up map instance on unmount
-  }, [rAndDLocation]); // Re-render the map when the R&D location changes
+  }, [selectedLocationCoordinates]); // Re-render the map when the R&D location changes
   
   
   
