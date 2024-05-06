@@ -9,7 +9,6 @@ import Map from './map';
 function Form() {
     const [companies, setCompanies] = useState([]);
     const [selectedCompanyId, setSelectedCompanyId] = useState('');
-    const [markerCoordinates, setMarkerCoordinates] = useState(null);
     const [formData, setFormData] = useState({
         name: '',
         headquarters_location: '',
@@ -19,7 +18,6 @@ function Form() {
     });
     const [successMessage, setSuccessMessage] = useState('');
     const [showSelect, setShowSelect] = useState(false);
-    const [selectedCountry, setSelectedCountry] = useState('');
     const [rdLocationSuggestions, setRdLocationSuggestions] = useState([]);
     const [loadingRdSuggestions, setLoadingRdSuggestions] = useState(false);
     const [selectedRdLocation, setSelectedRdLocation] = useState(null); // Selected R&D location
@@ -71,7 +69,7 @@ function Form() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         const formData = new FormData(event.target);
-
+    
         try {
             const response = await axios.post('http://localhost:4000/companies', {
                 name: formData.get('name'),
@@ -82,9 +80,22 @@ function Form() {
             });
             setSuccessMessage('Company added successfully');
             event.target.reset(); // Reset form after successful submission
-            setSelectedRdLocation(formData.get('r_and_d_location')); // Set the selected R&D location
+            setSelectedRdLocation(formData.get('r_and_d_location')); // Set the selected R&D location only after submitting the form
         } catch (error) {
             console.error('Error adding company: ', error);
+        }
+    };
+    
+
+    const handleUpdate = async (e) => {
+        e.preventDefault();
+        // Implement your update logic here, using formData and selectedCompanyId
+        try {
+            const response = await axios.put(`http://localhost:4000/companies/${selectedCompanyId}`, formData);
+            setSuccessMessage('Company updated successfully');
+            setSelectedRdLocation(formData.r_and_d_location); // Set the selected R&D location
+        } catch (error) {
+            console.error('Error updating company: ', error);
         }
     };
 
@@ -121,20 +132,6 @@ function Form() {
         }
     };
 
-    const handleUpdate = async (e) => {
-        e.preventDefault();
-        // Implement your update logic here, using formData and selectedCompanyId
-        try {
-            const response = await axios.put(`http://localhost:4000/companies/${selectedCompanyId}`, formData);
-            setSuccessMessage('Company updated successfully');
-            // Inside handleUpdate function, after successful update
-            setSelectedRdLocation(formData.r_and_d_location);
-
-        } catch (error) {
-            console.error('Error updating company: ', error);
-        }
-    };
-
     return (
         <div className="container">
             <form onSubmit={handleSubmit} className="form">
@@ -161,7 +158,7 @@ function Form() {
                     <input type="text" name="headquarters_location" placeholder="Enter headquarters location" value={formData.headquarters_location} required onChange={(e) => setFormData({ ...formData, headquarters_location: e.target.value })} className="input" />
                 </div>
 
-         
+
                 <div className="input-group">
                     <label htmlFor="country" className="label">Country:</label>
                     <select name="country" value={formData.country} onChange={(e) => setFormData({ ...formData, country: e.target.value })} className="input" required>
@@ -402,11 +399,10 @@ function Form() {
                     {selectedCompanyId && <button onClick={handleUpdate} className="button">Update</button>}
                     <button onClick={navigatehome} className="button">suivant</button>
                 </div>
+                
             </form>
             <Notification message={successMessage} />
-            {/* Pass selectedRdLocation to Map component */}
-            <Map selectedRdLocation={selectedRdLocation} productType={formData.product} companies={companies} />
-
+            <Map rAndDLocation={formData.r_and_d_location} /> {/* Pass the rAndDLocation prop */}
         </div>
 
     );

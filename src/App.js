@@ -3,10 +3,10 @@ import './App.css';
 import Form from './Component/form';
 import Homepage from './Homepage';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Map from './Component/mapp';
 import Mapp from './Component/mapp';
 import MappTest from './Component/mappTets';
-import MapTest from './Component/mapTest';
+import Map from './Component/map';
+
 
  
 function App() {
@@ -19,7 +19,7 @@ function App() {
                         <Route path="/" element={<Homepage />} />
                         <Route path="/mapp" element={<Mapp/>} />
                         <Route path="/mapTest" element={<MappTest/>} />
-                        <Route path="/map" element={<MapTest/>} />
+                        <Route path="/map" element={<Map/>} />
                   
                     </Routes>
                 </div>
