@@ -19,7 +19,6 @@ function Form() {
     });
     const [successMessage, setSuccessMessage] = useState('');
     const [showSelect, setShowSelect] = useState(false);
-    const [selectedCountry, setSelectedCountry] = useState('');
     const [rdLocationSuggestions, setRdLocationSuggestions] = useState([]);
     const [loadingRdSuggestions, setLoadingRdSuggestions] = useState(false);
     const [selectedRdLocation, setSelectedRdLocation] = useState(null); // Selected R&D location
@@ -71,7 +70,7 @@ function Form() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         const formData = new FormData(event.target);
-
+    
         try {
             const response = await axios.post('http://localhost:4000/companies', {
                 name: formData.get('name'),
@@ -82,12 +81,55 @@ function Form() {
             });
             setSuccessMessage('Company added successfully');
             event.target.reset(); // Reset form after successful submission
-            setSelectedRdLocation(formData.get('r_and_d_location')); // Set the selected R&D location
+    
+            const locationResponse = await axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(formData.get('r_and_d_location'))}.json?access_token=pk.eyJ1IjoibW9vdGV6ZmFyd2EiLCJhIjoiY2x1Z3BoaTFqMW9hdjJpcGdibnN1djB5cyJ9.It7emRJnE-Ee59ysZKBOJw`);
+            
+            // Check if the response is successful
+            if (locationResponse.status === 200) {
+                // Check if response data and features are available
+                if (locationResponse.data && locationResponse.data.features && locationResponse.data.features.length > 0) {
+                    const coordinates = locationResponse.data.features[0].geometry.coordinates;
+                    const longitude = coordinates[0];
+                    const latitude = coordinates[1];
+                    
+                    // Log the coordinates
+                    console.log('Coordinates:', coordinates);
+                    console.log('Longitude:', longitude);
+                    console.log('Latitude:', latitude);
+    
+                    // Check if longitude and latitude are valid numbers
+                    if (!isNaN(longitude) && !isNaN(latitude)) {
+                        // Set the marker coordinates
+                        setMarkerCoordinates({ longitude, latitude });
+                        setSelectedRdLocation(formData.get('r_and_d_location')); // Set the selected R&D location
+                    } else {
+                        console.error('Invalid coordinates: Longitude and latitude must be valid numbers');
+                        // Handle invalid coordinates
+                        setMarkerCoordinates(null);
+                        setSelectedRdLocation(null);
+                    }
+                } else {
+                    console.error('Invalid API response: No features found');
+                    // Handle invalid API response
+                    setMarkerCoordinates(null);
+                    setSelectedRdLocation(null);
+                }
+            } else {
+                console.error('Error fetching location data: ', locationResponse.statusText);
+                // Handle error fetching location data
+                setMarkerCoordinates(null);
+                setSelectedRdLocation(null);
+            }
         } catch (error) {
             console.error('Error adding company: ', error);
+            // Handle error adding company
+            setMarkerCoordinates(null);
+            setSelectedRdLocation(null);
         }
     };
-
+    
+    
+    
     const navigatehome = () => {
         navigate('/');
     }
@@ -405,7 +447,8 @@ function Form() {
             </form>
             <Notification message={successMessage} />
             {/* Pass selectedRdLocation to Map component */}
-            <Map selectedRdLocation={selectedRdLocation} productType={formData.product} companies={companies} />
+            <Map selectedLocationCoordinates={markerCoordinates} />
+
 
         </div>
 
