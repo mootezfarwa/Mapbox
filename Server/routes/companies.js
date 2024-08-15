@@ -1,5 +1,3 @@
-// routes/companies.js
-
 const express = require('express');
 const router = express.Router();
 const pool = require('../db');
@@ -17,11 +15,14 @@ router.get('/', async (req, res) => {
 
 // Add a new company
 router.post('/', async (req, res) => {
-  const { name, headquarters_location, r_and_d_location, country, product} = req.body;
+  const { name, email, headquarters_location, r_and_d_location, country, product, employeestrength, revenues, telephone, website, productionvolumes, keycustomers, region } = req.body;
   try {
+    // Check if product is an array before calling join
+    const productsString = Array.isArray(product) ? product.join(', ') : product;
+    
     const result = await pool.query(
-      'INSERT INTO companies (name, headquarters_location, r_and_d_location, country, product) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [name, headquarters_location, r_and_d_location, country, product]
+      'INSERT INTO companies (name, email, headquarters_location, r_and_d_location, country, product, employeestrength, revenues, telephone, website, productionvolumes, keycustomers, region) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *',
+      [name, email, headquarters_location, r_and_d_location, country, productsString, employeestrength, revenues, telephone, website, productionvolumes, keycustomers, region]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -30,14 +31,16 @@ router.post('/', async (req, res) => {
   }
 });
 
+
+
 // Update an existing company
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, headquarters_location, r_and_d_location, country,product } = req.body;
+  const { name, headquarters_location, r_and_d_location, country, product, email, employeestrength, revenues, telephone, productionvolumes, keycustomers, region } = req.body;
   try {
     const result = await pool.query(
-      'UPDATE companies SET name = $1, headquarters_location = $2, r_and_d_location = $3, country = $4, product = $5 WHERE id = $6 RETURNING *',
-      [name, headquarters_location, r_and_d_location, country, product, id]
+      'UPDATE companies SET name = $1, headquarters_location = $2, r_and_d_location = $3, country = $4, product = $5, email = $6, employeestrength = $7, revenues = $8, telephone = $9, productionvolumes = $10, keycustomers = $11, region = $12 WHERE id = $13 RETURNING *',
+      [name, headquarters_location, r_and_d_location, country, product, email, employeestrength, revenues, telephone, productionvolumes, keycustomers, region, id]
     );
     res.json(result.rows[0]);
   } catch (err) {
@@ -45,7 +48,6 @@ router.put('/:id', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
-
 
 // Get a single company by ID
 router.get('/:id', async (req, res) => {
@@ -61,6 +63,5 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
-
 
 module.exports = router;

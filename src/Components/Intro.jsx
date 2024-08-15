@@ -10,12 +10,12 @@ const Intro = () => {
     <Container>
       <Left>
         <Title>
-          <span style={{ color: '#046eaf',fontStyle: 'italic' }}>AVO</span>
-          <span style={{ color: 'gray',fontStyle: 'italic' }}>Carbon</span> 
-          <span style={{ color: '#ef7807' ,fontSize: '24px',fontStyle: 'italic'}}>Group</span> 
+          <span style={{ color: '#046eaf',fontStyle: 'italic' }}>Competitor</span>
+          <span style={{ color: 'gray',fontStyle: 'italic' }}>Mapping</span> 
+          <span style={{ color: '#ef7807' ,fontSize: '35px',fontStyle: 'italic'}}>Tool</span> 
         </Title>
         <Desc>
-          This application allows you to identify your competitors on a map and add information about them.
+          Identify your competitors & position your company
         </Desc>
         <Info>
           <Link to="/form">
@@ -28,7 +28,7 @@ const Intro = () => {
         
       </Left>
       <Right>
-        <h1 style={{  marginLeft: '20px',color: '#046eaf' }}>Competitor Mapping</h1>
+      
         <img src={woman} alt="Woman" style={{  marginTop: '180px' }} />
         <Contact>
           <ContactText>For any question or concern</ContactText>
